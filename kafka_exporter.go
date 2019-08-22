@@ -416,7 +416,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 			for topic, partitions := range offset {
 				topicPartitions[topic] = make([]int32, 0, len(partitions))
 				for partition := range partitions {
+					offsetMutex.RLock()
 					topicPartitions[topic] = append(topicPartitions[topic], partition)
+					offsetMutex.RUnlock()
 				}
 			}
 			ch <- prometheus.MustNewConstMetric(
