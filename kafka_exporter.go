@@ -414,10 +414,12 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 			topicPartitions := make(map[string][]int32)
 
 			for topic, partitions := range offset {
+				offsetMutex.Lock()
 				topicPartitions[topic] = make([]int32, 0, len(partitions))
 				for partition := range partitions {
 					topicPartitions[topic] = append(topicPartitions[topic], partition)
 				}
+				offsetMutex.Unlock()
 			}
 			ch <- prometheus.MustNewConstMetric(
 				consumergroupMembers, prometheus.GaugeValue, float64(len(group.Members)), group.GroupId,
