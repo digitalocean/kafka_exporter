@@ -1,12 +1,15 @@
 sudo: required
 
 services:
-- docker
+  - docker
 
 language: go
 
 go:
-- 1.9
+  - 1.12
+
+env:
+  - GO111MODULE=on
 
 after_success:
 - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
